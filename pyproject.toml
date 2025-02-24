@@ -17,8 +17,14 @@ dependencies = [
     "uvicorn>=0.28.0",
     "pandas>=2.2.1",
     "coverage==7.4.4",
+    "google-api-python-client>=2.161.0",
+    "google-auth-httplib2>=0.2.0",
+    "google-auth-oauthlib>=1.2.1",
+    "psycopg2>=2.9.10",
+    "psycopg2-binary>=2.9.10",
+    "plotly>=6.0.0",
 ]
-requires-python = ">=3.9"
+requires-python = "==3.11"
 readme = "README.md"
 license = {text = "MIT"}
 
