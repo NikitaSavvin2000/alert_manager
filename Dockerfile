@@ -11,5 +11,5 @@ RUN pip install -U pip setuptools wheel
 RUN pip install pdm
 RUN pdm install
 
-ENTRYPOINT ["pdm", "run", "src/utils/telegram_bot.py"]
+RUN python -m src.utils.telegram_bot
 ENTRYPOINT ["pdm", "run", "src/server.py"]
