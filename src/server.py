@@ -142,14 +142,14 @@ async def notification_request():
     """
 
     try:
-        asyncio.run(notification())
+        await notification()
         return {"massage": 'Emails send successfuly'}
     except HTTPException as e:
         raise e
     except Exception as ApplicationError:
         raise HTTPException(
             status_code=500,
-            detail=f"Неизвестная ошибка при получении списка файлов: {ApplicationError}",
+            detail=f"Неизвестная ошибка при вызове notification: {ApplicationError}",
             headers={"X-Error": f"{ApplicationError}"},
         )
 
