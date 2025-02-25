@@ -5,7 +5,7 @@
 groups = ["default"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:9d679e88d11ddd395ab91376537d6b43eb6093e599638b9a1ec1c31f681bb57d"
+content_hash = "sha256:d1a6490c938c337339479d78f8316dfbffd6c0878cbbb06c83713d7ee0b0a1ec"
 
 [[metadata.targets]]
 requires_python = "==3.12.*"
@@ -1003,18 +1003,6 @@ files = [
     {file = "protobuf-5.29.3-cp38-abi3-manylinux2014_x86_64.whl", hash = "sha256:c027e08a08be10b67c06bf2370b99c811c466398c357e615ca88c91c07f0910f"},
     {file = "protobuf-5.29.3-py3-none-any.whl", hash = "sha256:0a18ed4a24198528f2333802eb075e59dea9d679ab7a6c5efb017a59004d849f"},
     {file = "protobuf-5.29.3.tar.gz", hash = "sha256:5da0f41edaf117bde316404bad1a486cb4ededf8e4a54891296f648e8e076620"},
-]
-
-[[package]]
-name = "psycopg2"
-version = "2.9.10"
-requires_python = ">=3.8"
-summary = "psycopg2 - Python-PostgreSQL Database Adapter"
-groups = ["default"]
-files = [
-    {file = "psycopg2-2.9.10-cp312-cp312-win32.whl", hash = "sha256:65a63d7ab0e067e2cdb3cf266de39663203d38d6a8ed97f5ca0cb315c73fe067"},
-    {file = "psycopg2-2.9.10-cp312-cp312-win_amd64.whl", hash = "sha256:4a579d6243da40a7b3182e0430493dbd55950c493d8c68f4eec0b302f6bbf20e"},
-    {file = "psycopg2-2.9.10.tar.gz", hash = "sha256:12ec0b40b0273f95296233e8750441339298e6a572f7039da5b260e3c8b60e11"},
 ]
 
 [[package]]
