@@ -26,10 +26,6 @@ def send_email_with_html_attachment(html_path, subject, recipient_emails, email_
     message["Subject"] = subject
     message.attach(MIMEText(email_body, "html"))
 
-    print('===================================')
-    print('send_email_with_html_attachment 1 IS WORKING')
-    print('===================================')
-
     try:
         with open(html_path, 'rb') as file:
             part = MIMEApplication(file.read(), Name="graph.html")

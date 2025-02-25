@@ -244,9 +244,6 @@ async def notification():
             """
 
             if has_condition:
-                print('===================================')
-                print('has_condition IS WORKING')
-                print('===================================')
 
                 temporary_html_path = create_graph(
                     df0=df_norm,
@@ -254,16 +251,10 @@ async def notification():
                     threshold=threshold
                 )
 
-                print('===================================')
-                print('telegram_sendler IS WORKING')
-                print('===================================')
                 await telegram_sendler(
                     text_message=telegram_text_message,
                     html_path=temporary_html_path)
 
-                print('===================================')
-                print('send_email_with_html_attachment IS WORKING')
-                print('===================================')
                 send_email_with_html_attachment(
                         html_path=temporary_html_path,
                         subject=message,
