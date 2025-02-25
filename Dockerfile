@@ -6,11 +6,12 @@ WORKDIR /app
 ENV PYTHONPATH=/app
 
 COPY pyproject.toml .
-COPY pdm.lock .
 
 RUN pip install -U pip setuptools wheel
 RUN pip install pdm
+
 RUN pdm install
+
 
 ENTRYPOINT ["pdm", "run", "src/utils/telegram_bot.py"]
 ENTRYPOINT ["pdm", "run", "src/server.py"]
