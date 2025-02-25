@@ -41,7 +41,6 @@ async def send_notifications(text_message, html_path):
 
     for chat_id in chat_ids:
         try:
-
             await bot.send_message(chat_id, text_message, parse_mode="HTML")
 
             file_bytes = BytesIO(file_content)

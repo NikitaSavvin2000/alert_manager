@@ -198,28 +198,27 @@ async def notification():
                 if scheme == 'below':
                     has_condition = (filtered_df_to_alert['load_consumption'] < threshold).any()
                     df_to_alert.loc[(df_to_alert['load_consumption'] <= threshold), 'load_consumption'] = None
+                    text = f'🔻<b>Понижение ниже допустимого уровня</b> (&lt; {threshold} КВт)'
                 elif scheme == 'above':
                     has_condition = (filtered_df_to_alert['load_consumption'] > threshold).any()
                     df_to_alert.loc[(df_to_alert['load_consumption'] >= threshold), 'load_consumption'] = None
-
+                    text = f'🔺<b>Превышение лимита</b> (> {threshold} КВт)'
                 else:
                     has_condition = True
+                    text = 'no data'
 
-            word = 'выше'
-            text = f'🔺<b>Превышение лимита</b> (> {threshold} КВт)'
-            if scheme == 'above':
-                text = f'🔻 <b>Понижение ниже допустимого уровня</b> (< {threshold} КВт)'
+
 
             telegram_text_message = (
                 f'📢 Внимание! Предупреждение о возможном превышении на основании прогноза\n'
                 f'━━━━━━━━━━━━━━━━━━━━━\n'
-                f'🔹️ <b>Название:</b> {name}\n'
+                f'🔹️<b>Название:</b> {name}\n'
                 f'🔹<b>Статус:</b> ⚠️ Отклонение от установленного значения!\n'
-                f'🔹 <b>Тип предупреждения:</b>\n'
+                f'🔹<b>Тип предупреждения:</b>\n'
                 f'{text}\n'
-                f'🔹 <b>В период:</b>\n'
-                f'📅 <b>Начало:</b> {start_date}\n'
-                f'⏳ <b>Окончание:</b>  {end_date}'
+                f'🔹<b>В период:</b>\n'
+                f'📅<b>Начало:</b> {start_date}\n'
+                f'⏳<b>Окончание:</b>  {end_date}'
             )
 
             message = f'⚠️ Прогноз выхода за установленное значение - {name}'
@@ -244,6 +243,9 @@ async def notification():
             """
 
             if has_condition:
+                print('==================================')
+                print(f'Отработало предупреждение {name}')
+                print('==================================')
 
                 temporary_html_path = create_graph(
                     df0=df_norm,

@@ -42,16 +42,25 @@ async def create_alert_endpoint(body: Annotated[
             "trigger_frequency": "60m",
             "message": "Пороговое значение превышено!",
             "telegram_nicknames": ["@user1", "@user2"],
-            "email_addresses": ["user1@example.com", "user2@example.com"],
+            "email_addresses": ["savvin.nikit@yandex.ru", "user2@example.com"],
             "include_graph": True,
             "time_interval": [
-                "2024-10-01 00:00:00",
-                "2024-10-10 23:59:59"
+                "2025-02-25 00:00:00",
+                "2025-02-25 23:59:59"
             ],
             "start_warning_interval": "60m"
         }
     ),
 ]):
+
+    """
+    Эндпоинт для удаления YAML-конфига по названию файла.
+
+    Параметры:
+    - alert_scheme: "above" or "below"
+    - trigger_frequency: once - один раз, 1m, 1h, 1d, 1w, 1M, 1y  как часто обновлять предупреждение каждую минуту час день и тд
+    - start_warning_interval 1m, 1h, 1d, 1w, 1M, 1y  - начало предупреждений за
+    """
 
     name = body.name,
     threshold_value = body.threshold_value,
