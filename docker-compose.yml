@@ -1,0 +1,32 @@
+version: "3.9"
+
+services:
+  telegram_bot:
+    build: .
+    command: pdm run src/utils/telegram_bot.py
+    ports:
+      - "7070:7080"
+    environment:
+      - API_TOKEN=8081596972:AAHR4IRp-AmM10p2CKaY48tIYcygW_B88XU
+      - sender_email=nikita.vsav@gmail.com
+      - password=cjui omfh rupq rcps
+      - user=myuser
+      - password_db=mypassword
+      - host=77.37.136.11
+      - port=8083
+      - dbname=mydb
+
+  server:
+    build: .
+    command: pdm run src/server.py
+    ports:
+      - "7070:7080"
+    environment:
+      - API_TOKEN=8081596972:AAHR4IRp-AmM10p2CKaY48tIYcygW_B88XU
+      - sender_email=nikita.vsav@gmail.com
+      - password=cjui omfh rupq rcps
+      - user=myuser
+      - password_db=mypassword
+      - host=77.37.136.11
+      - port=8083
+      - dbname=mydb
