@@ -9,9 +9,7 @@ COPY pyproject.toml .
 
 RUN pip install -U pip setuptools wheel
 RUN pip install pdm
-
-RUN pdm install
-
+RUN pdm install --prod --no-lock --no-editable
 
 ENTRYPOINT ["pdm", "run", "src/utils/telegram_bot.py"]
 ENTRYPOINT ["pdm", "run", "src/server.py"]
