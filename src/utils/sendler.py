@@ -238,11 +238,16 @@ def notification():
                     <p>⏳ <b>Окончание:</b>  {end_date}</p>
                     <p>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</p>
                     <p>С уважением,</p>
-                    <p> служба автоматической рассылки предупреждений</p>
+                    <p>Служба автоматической рассылки предупреждений</p>
                   </body>
                 </html>
             """
+
             if has_condition:
+                print('===================================')
+                print('has_condition IS WORKING')
+                print('===================================')
+
                 temporary_html_path = create_graph(
                     df0=df_norm,
                     df1=df_to_alert,
