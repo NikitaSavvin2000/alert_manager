@@ -3,7 +3,7 @@ import yaml
 import asyncio
 import logging
 
-from src.config import API_TOKEN
+from config import API_TOKEN
 from aiogram.filters import Command
 from aiogram import Bot, Dispatcher, types
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton

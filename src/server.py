@@ -4,12 +4,12 @@ import uvicorn
 from fastapi import FastAPI, HTTPException, Body
 from fastapi.middleware.cors import CORSMiddleware
 
-from src.config import logger, public_or_local
-from src.models.schemes import  AlertConfigRequest, DeleteAlertRequest
-from src.utils.create import create_alert_config
-from src.utils.delete import delete_alert_config
-from src.utils.list_alerts import list_yaml_files_with_content
-from src.utils.sendler import notification
+from config import logger, public_or_local
+from models.schemes import  AlertConfigRequest, DeleteAlertRequest
+from utils.create import create_alert_config
+from utils.delete import delete_alert_config
+from utils.list_alerts import list_yaml_files_with_content
+from utils.sendler import notification
 
 
 if public_or_local == 'LOCAL':
