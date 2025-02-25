@@ -9,6 +9,7 @@ from src.models.schemes import  AlertConfigRequest, DeleteAlertRequest
 from src.utils.create import create_alert_config
 from src.utils.delete import delete_alert_config
 from src.utils.list_alerts import list_yaml_files_with_content
+from src.utils.sendler import notification
 
 
 if public_or_local == 'LOCAL':
@@ -123,6 +124,26 @@ async def list_alert_configs():
 
         files_content = list_yaml_files_with_content()
         return {"yaml_files": files_content}
+    except HTTPException as e:
+        raise e
+    except Exception as ApplicationError:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Неизвестная ошибка при получении списка файлов: {ApplicationError}",
+            headers={"X-Error": f"{ApplicationError}"},
+        )
+
+
+@app.get("/alert_manager/v1/notification")
+async def notification_request():
+
+    """
+    Эндпоинт для расылки сообщений по email и по telegram
+    """
+
+    try:
+        notification()
+        return {"massage": 'Emails send successfuly'}
     except HTTPException as e:
         raise e
     except Exception as ApplicationError:

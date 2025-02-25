@@ -35,23 +35,23 @@ http://0.0.0.0:7070/template_fast_api/v1/#/
 
 ### Строим контейнер
 ```bash
-    docker build -t fast_api_template .
+sudo docker build -t alert_managers .
 ```
 Узнаем его IMAGE ID 
 ```bash
-docker images
+sudo docker images
 ```
 
 ```bash
-docker run -d -p 7071:7071 bb1942a77c32
+sudo docker run -d -p 7071:7071 bb1942a77c32
 ```
 
 ```bash
-docker run -d -p 80:7071 bb1942a77c32
+sudo docker run -d -p 80:7071 bb1942a77c32
 ```
 
 ```bash
-docker run -d -p 7071:80 <IMAGE ID>
+sudo docker run -d -p 7071:80 <IMAGE ID>
 ```
 
 
@@ -60,13 +60,13 @@ docker run -d -p 7071:80 <IMAGE ID>
 
 ### Строим контейнер
 ```bash
-docker build -t fast_api_template .
+sudo docker build -t alert_managers .
 ```
 Узнаем его ID
 ```bash
-docker images
+sudo docker images
 ```
 
 ```bash
-docker run -p 7071:7071 <IMAGE ID>
+sudo docker run -p 7071:7071 <IMAGE ID>
 ```

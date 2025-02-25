@@ -6,18 +6,11 @@ import pandas as pd
 from plotly.subplots import make_subplots
 import uuid
 from datetime import datetime
-from src.utils.email_client import send_email_with_image
+from utils.email_client import send_email_with_html_attachment
 import plotly.graph_objects as go
-
-
-
-DB_PARAMS = {
-    "dbname": "mydb",
-    "user": "myuser",
-    "password": "mypassword",
-    "host": "77.37.136.11",
-    "port": 8083
-}
+from utils.telegram_sendler import telegram_sendler
+import asyncio
+from config import DB_PARAMS
 
 
 measurement = 'load_consumption'
@@ -29,6 +22,7 @@ home_path = os.getcwd()
 filename_path = os.path.join(home_path, 'src', 'alerts')
 
 temporary_path = os.path.join(home_path, 'src', 'temporary_pngs')
+
 
 def fetch_data_from_timescaledb():
     conn = psycopg2.connect(**DB_PARAMS)
@@ -55,6 +49,21 @@ def fetch_data_from_timescaledb():
     conn.close()
 
     return df
+
+
+def remove_file(file_path):
+    """
+    Удаляет файл по заданному пути, если он существует.
+
+    :param file_path: Строка с путём к файлу.
+    """
+    try:
+        if os.path.exists(file_path):
+            os.remove(file_path)
+        else:
+            print(f"Файл '{file_path}' не найден.")
+    except Exception as e:
+        print(f"Ошибка при удалении файла '{file_path}': {e}")
 
 
 def create_graph(df0, df1, threshold):
@@ -89,7 +98,7 @@ def create_graph(df0, df1, threshold):
             y=df0["load_consumption"],
             mode='lines',
             name='Alert line',
-            line=dict(color='red', width=3)
+            line=dict(color='red',)
         ),
         row=1, col=1
     )
@@ -100,17 +109,15 @@ def create_graph(df0, df1, threshold):
             y=df1["load_consumption"],
             mode='lines',
             name='Normal line',
-            line=dict(color='orange')
+            line=dict(color='mediumseagreen')
         ),
         row=1, col=1
     )
 
-    key_graph = str(uuid.uuid4()) + '.png'
-    print(key_graph)
+    key_graph = str(uuid.uuid4()) + '.html'
     temporary_png_path = os.path.join(temporary_path, key_graph)
-    print(temporary_png_path)
-    fig_p_l_real_pred.show()
-    fig_p_l_real_pred.write_image(temporary_png_path)
+    fig_p_l_real_pred.write_html(temporary_png_path)
+
 
     return temporary_png_path
 
@@ -148,6 +155,9 @@ def add_time_to_date(start_date, time_str):
 
 def notification():
     df = fetch_data_from_timescaledb()
+    # df.to_csv('/Users/nikitasavvin/Desktop/PhD/alert_manager/src/temporary_pngs/test.csv')
+    # df = pd.read_csv('/Users/nikitasavvin/Desktop/PhD/alert_manager/src/temporary_pngs/test.csv')
+    df["datetime"] = pd.to_datetime(df["datetime"])
     df["datetime"] = df["datetime"].dt.tz_localize(None)
     yaml_files = [f for f in os.listdir(filename_path) if f.endswith(".yaml")]
     result = []
@@ -178,8 +188,6 @@ def notification():
             start_notification_date = add_time_to_date(datetime.now(), start_warning_interval)
 
             has_condition = False
-            print(start_date)
-            print(end_date)
 
             if start_notification_date >= start_date and start_notification_date <= end_date:
                 df_to_alert = df.copy()
@@ -187,27 +195,73 @@ def notification():
 
                 filtered_df_to_alert = df[(df['datetime'] >= start_date) & (df['datetime'] <= end_date)]
 
-                df_to_alert.loc[(df_to_alert['load_consumption'] >= threshold), 'load_consumption'] = None
-                df_norm.loc[(df_norm['load_consumption'] <= threshold), 'load_consumption'] = None
-
-
-
                 if scheme == 'below':
                     has_condition = (filtered_df_to_alert['load_consumption'] < threshold).any()
+                    df_to_alert.loc[(df_to_alert['load_consumption'] <= threshold), 'load_consumption'] = None
                 elif scheme == 'above':
                     has_condition = (filtered_df_to_alert['load_consumption'] > threshold).any()
+                    df_to_alert.loc[(df_to_alert['load_consumption'] >= threshold), 'load_consumption'] = None
+
                 else:
                     has_condition = True
 
+            word = 'выше'
+            text = f'🔺<b>Превышение лимита</b> (> {threshold} КВт)'
+            if scheme == 'above':
+                text = f'🔻 <b>Понижение ниже допустимого уровня</b> (< {threshold} КВт)'
+
+            telegram_text_message = (
+                f'📢 Внимание! Прогнозное предупреждение о потреблении электроэнергии\n'
+                f'━━━━━━━━━━━━━━━━━━━━━\n'
+                f'🔹️ <b>Название:</b> {name}\n'
+                f'🔹<b>Статус:</b> ⚠️ Отклонение от установленного значения!\n'
+                f'🔹 Тип предупреждения:\n'
+                f'{text}\n'
+                f'🔹 Период действия предупреждения:\n'
+                f'📅 <b>Начало:</b> {start_date}\n'
+                f'⏳ <b>Окончание:</b>  {end_date}'
+            )
+
+            message = f'⚠️ Прогноз выхода за установленное значение - {name}'
+            body_text = f"""
+                <html>
+                  <body>
+                    <h3>Здравствуйте!</h3>
+                    <p>📢 Внимание! Предупреждение о возможном превышении на основании прогноза</p>
+                    <p>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</p>
+                    <p>🔹️ <b>Название:</b> {name}</p>
+                    <p>🔹<b>Статус:</b> ⚠️ Отклонение от установленного значения!</p>
+                    <p>🔹 <b>Тип предупреждения:</b></p>
+                    <p>{text}</p>
+                    <p>🔹 <b>В период:</b></p>
+                    <p>📅 <b>Начало:</b> {start_date}</p>
+                    <p>⏳ <b>Окончание:</b>  {end_date}</p>
+                    <p>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</p>
+                    <p>С уважением,</p>
+                    <p> служба автоматической рассылки предупреждений</p>
+                  </body>
+                </html>
+            """
             if has_condition:
+                temporary_html_path = create_graph(
+                    df0=df_norm,
+                    df1=df_to_alert,
+                    threshold=threshold
+                )
 
-                # create_graph(df0=df, df1=df_to_alert, threshold=threshold)
+                asyncio.run(telegram_sendler(
+                    text_message=telegram_text_message,
+                    html_path=temporary_html_path))
 
-                image_path = '/Users/nikitasavvin/Desktop/PhD/alert_manager/src/newplot-2.png'
-                send_email_with_image(image_path=image_path, message_body=message, recipient_emails=emails)
+                send_email_with_html_attachment(
+                        html_path=temporary_html_path,
+                        subject=message,
+                        recipient_emails=emails,
+                        email_body=body_text)
+
+                remove_file(temporary_html_path)
 
         except Exception as e:
                print(e)
-
 
 notification()
