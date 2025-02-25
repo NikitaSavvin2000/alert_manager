@@ -3,7 +3,7 @@ from typing import Annotated, List
 import uvicorn
 from fastapi import FastAPI, HTTPException, Body
 from fastapi.middleware.cors import CORSMiddleware
-
+import asyncio
 from config import logger, public_or_local
 from models.schemes import  AlertConfigRequest, DeleteAlertRequest
 from utils.create import create_alert_config
@@ -142,7 +142,7 @@ async def notification_request():
     """
 
     try:
-        notification()
+        asyncio.run(notification())
         return {"massage": 'Emails send successfuly'}
     except HTTPException as e:
         raise e
