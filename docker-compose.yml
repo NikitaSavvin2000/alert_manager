@@ -5,7 +5,7 @@ services:
     build: .
     command: pdm run src/utils/telegram_bot.py
     ports:
-      - "8081:8081"
+      - "8502:8502"
     environment:
       - API_TOKEN=8081596972:AAHR4IRp-AmM10p2CKaY48tIYcygW_B88XU
       - sender_email=nikita.vsav@gmail.com
