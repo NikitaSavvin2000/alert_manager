@@ -254,10 +254,16 @@ def notification():
                     threshold=threshold
                 )
 
+                print('===================================')
+                print('telegram_sendler IS WORKING')
+                print('===================================')
                 asyncio.run(telegram_sendler(
                     text_message=telegram_text_message,
                     html_path=temporary_html_path))
 
+                print('===================================')
+                print('send_email_with_html_attachment IS WORKING')
+                print('===================================')
                 send_email_with_html_attachment(
                         html_path=temporary_html_path,
                         subject=message,

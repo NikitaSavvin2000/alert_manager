@@ -31,6 +31,10 @@ async def send_notifications(text_message, html_path):
     text_message = text_message
 
     html_path = Path(html_path)
+
+    print('===================================')
+    print('send_notifications IS WORKING')
+    print('===================================')
     if not html_path.exists():
         logging.error(f"Файл {html_path} не найден!")
         return
@@ -40,6 +44,9 @@ async def send_notifications(text_message, html_path):
 
     for chat_id in chat_ids:
         try:
+            print('===================================')
+            print('send_notifications 2 IS WORKING')
+            print('===================================')
             await bot.send_message(chat_id, text_message, parse_mode="HTML")
 
             file_bytes = BytesIO(file_content)
