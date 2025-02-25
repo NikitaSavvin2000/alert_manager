@@ -257,9 +257,9 @@ async def notification():
                 print('===================================')
                 print('telegram_sendler IS WORKING')
                 print('===================================')
-                asyncio.run(telegram_sendler(
+                await telegram_sendler(
                     text_message=telegram_text_message,
-                    html_path=temporary_html_path))
+                    html_path=temporary_html_path)
 
                 print('===================================')
                 print('send_email_with_html_attachment IS WORKING')
