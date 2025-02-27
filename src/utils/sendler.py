@@ -181,11 +181,13 @@ async def notification():
             if end_date < datetime.now() and trigger_frequency != 'once':
                 start_date = add_time_to_date(start_date, trigger_frequency)
                 end_date = add_time_to_date(end_date,trigger_frequency)
-                alert['alert']['time_interval']['start_date'] = start_date
-                alert['alert']['time_interval']['end_date'] = end_date
-
-            with open(file_path, 'w', encoding='utf-8') as f:
-                yaml.safe_dump(alert, f, allow_unicode=True, default_flow_style=False)
+                alert['alert']['time_interval']['start_date'] = start_date.strftime('%Y-%m-%d %H:%M:%S')
+                alert['alert']['time_interval']['end_date'] = end_date.strftime('%Y-%m-%d %H:%M:%S')
+                print('='*50)
+                print(alert)
+                if alert is not None:
+                    with open(file_path, 'w', encoding='utf-8') as f:
+                        yaml.safe_dump(alert, f, allow_unicode=True, default_flow_style=False)
 
             start_notification_date = add_time_to_date(datetime.now(), start_warning_interval)
 

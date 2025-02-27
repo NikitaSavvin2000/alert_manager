@@ -31,6 +31,7 @@ app.add_middleware(
 )
 
 
+
 @app.post("/alert_manager/v1/create")
 async def create_alert_endpoint(body: Annotated[
     AlertConfigRequest,
@@ -39,7 +40,7 @@ async def create_alert_endpoint(body: Annotated[
             "name": "High CPU Usage Alert",
             "threshold_value": 100.0,
             "alert_scheme": "above",
-            "trigger_frequency": "60m",
+            "trigger_frequency": "1d",
             "message": "Пороговое значение превышено!",
             "telegram_nicknames": ["@user1", "@user2"],
             "email_addresses": ["savvin.nikit@yandex.ru", "user2@example.com"],

@@ -9,7 +9,6 @@ filename_path = os.path.join(home_path, 'src', 'alerts')
 
 
 def list_yaml_files_with_content() -> List[Dict[str, Dict]]:
-    print('is work')
 
     """
     Возвращает список содержимого YAML-файлов в формате JSON.
@@ -23,17 +22,11 @@ def list_yaml_files_with_content() -> List[Dict[str, Dict]]:
     result = []
     for file in yaml_files:
         file_path = os.path.join(filename_path, file)
-        print(file_path)
-
         try:
             with open(file_path, 'r', encoding='utf-8') as f:
-                print(f)
-
                 content = yaml.safe_load(f)
-                print(content)
 
                 content['file_name'] = file
-                print(content)
                 result.append(content)
         except Exception as e:
             raise HTTPException(
@@ -41,5 +34,4 @@ def list_yaml_files_with_content() -> List[Dict[str, Dict]]:
                 detail=f"Ошибка при чтении файла {file}: {e}",
                 headers={"X-Error": f"{e}"},
             )
-    print(result)
     return result

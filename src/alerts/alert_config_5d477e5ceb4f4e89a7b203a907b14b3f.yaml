@@ -1,0 +1,18 @@
+alert:
+  include_graph: true
+  message: Пороговое значение превышено!
+  name: High CPU Usage Alert
+  notifications:
+    email:
+    - savvin.nikit@yandex.ru
+    - user2@example.com
+    telegram:
+    - '@user1'
+    - '@user2'
+  scheme: above
+  start_warning_interval: 60m
+  threshold: 100.0
+  time_interval:
+    end_date: '2025-02-27 23:59:59'
+    start_date: '2025-02-27 00:00:00'
+  trigger_frequency: 1d
