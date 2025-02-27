@@ -160,30 +160,32 @@ async def notification():
     df["datetime"] = pd.to_datetime(df["datetime"])
     df["datetime"] = df["datetime"].dt.tz_localize(None)
     yaml_files = [f for f in os.listdir(filename_path) if f.endswith(".yaml")]
-    result = []
     for file in yaml_files:
         file_path = os.path.join(filename_path, file)
         try:
             with open(file_path, 'r', encoding='utf-8') as f:
-                alert = yaml.safe_load(f)['alert']
+                alert = yaml.safe_load(f)
 
-            name = alert['name']
-            threshold = float(alert['threshold'])
-            scheme = alert['scheme'] # Схема оповещения ('above' или 'below').
-            trigger_frequency = alert['trigger_frequency']
-            message = alert['message']
-            include_graph = alert['include_graph']
-            start_warning_interval = alert['start_warning_interval']
-            start_date = pd.to_datetime(alert['time_interval']['start_date'])
-            end_date = pd.to_datetime(alert['time_interval']['end_date'])
-            telegrams = list(alert['notifications']['telegram'])
-            emails =list(alert['notifications']['email'])
+            name = alert['alert']['name']
+            threshold = float(alert['alert']['threshold'])
+            scheme = alert['alert']['scheme'] # Схема оповещения ('above' или 'below').
+            trigger_frequency = alert['alert']['trigger_frequency']
+            message = alert['alert']['message']
+            include_graph = alert['alert']['include_graph']
+            start_warning_interval = alert['alert']['start_warning_interval']
+            start_date = pd.to_datetime(alert['alert']['time_interval']['start_date'])
+            end_date = pd.to_datetime(alert['alert']['time_interval']['end_date'])
+            telegrams = list(alert['alert']['notifications']['telegram'])
+            emails =list(alert['alert']['notifications']['email'])
 
             if end_date < datetime.now() and trigger_frequency != 'once':
                 start_date = add_time_to_date(start_date, trigger_frequency)
                 end_date = add_time_to_date(end_date,trigger_frequency)
-                alert['time_interval']['start_date'] = start_date
-                alert['time_interval']['end_date'] = end_date
+                alert['alert']['time_interval']['start_date'] = start_date
+                alert['alert']['time_interval']['end_date'] = end_date
+
+            with open(file_path, 'w', encoding='utf-8') as f:
+                yaml.safe_dump(alert, f, allow_unicode=True, default_flow_style=False)
 
             start_notification_date = add_time_to_date(datetime.now(), start_warning_interval)
 
@@ -218,7 +220,9 @@ async def notification():
                 f'{text}\n'
                 f'🔹<b>В период:</b>\n'
                 f'📅<b>Начало:</b> {start_date}\n'
-                f'⏳<b>Окончание:</b>  {end_date}'
+                f'⏳<b>Окончание:</b>  {end_date}\n'
+                f'💬<b>Сообщение:</b>  {message}'
+
             )
 
             message = f'⚠️ Прогноз выхода за установленное значение - {name}'
@@ -235,6 +239,7 @@ async def notification():
                     <p>🔹 <b>В период:</b></p>
                     <p>📅 <b>Начало:</b> {start_date}</p>
                     <p>⏳ <b>Окончание:</b>  {end_date}</p>
+                    <p>💬<b>Сообщение:</b>  {message}</p>
                     <p>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</p>
                     <p>С уважением,</p>
                     <p>Служба автоматической рассылки предупреждений</p>

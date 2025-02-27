@@ -95,7 +95,6 @@ async def create_alert_endpoint(body: Annotated[
         )
 
 
-
 @app.delete("/alert_manager/v1/delete")
 async def delete_alert_endpoint(body: DeleteAlertRequest = Body(
     example={"filename": "alert_config_123456.yaml"}
